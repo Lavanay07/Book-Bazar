@@ -11,6 +11,12 @@ const bookSchema = new mongoose.Schema({
     language: String,
     image: String,
     userEmail:String
-});
+ } ,
+ {   timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+}
+ }
+);
 // export const Book=mongoose.model('Book',bookSchema)
 module.exports = mongoose.model('Book', bookSchema);
