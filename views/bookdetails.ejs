@@ -228,7 +228,9 @@ body, h1, h2, p {
                 </h5>
                 <h5>Description: <%= book.description %>
                 </h5>
-                <button onclick="chatWithOwner()">Chat with Owner</button>
+                 <h5>Owner: <%= book.user %></h5>
+
+    <button onclick="chatWithOwner('<%= book.user %>')">Chat with Owner</button> <!-- Add this line for chat button -->
             </div>
         </div>
     </div>
@@ -256,6 +258,10 @@ body, h1, h2, p {
         var image = '<%= book.image %>';
         var mail = '<%= book.userEmail %>';
         window.location.href = "newPage.html?title=" + encodeURIComponent(title) + "&price=" + encodeURIComponent(price) + "&image=" + encodeURIComponent(image) + "&mail=" + encodeURIComponent(mail);
+    }
+      function chatWithOwner(ownerName) {
+        // Implement your chat functionality here, using the ownerName
+        alert("Chat with " + ownerName);
     }
 </script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>

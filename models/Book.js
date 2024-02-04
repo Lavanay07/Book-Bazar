@@ -1,7 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // Define the Book model schema here
-const bookSchema = new mongoose.Schema({
+const bookSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.String,
+      ref: "User",
+    },
     title: String,
     author: String,
     publicationYear: Number,
@@ -10,13 +15,14 @@ const bookSchema = new mongoose.Schema({
     publisher: String,
     language: String,
     image: String,
-    userEmail:String
- } ,
- {   timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
-}
- }
+    userEmail: String,
+  },
+  {
+    timestamps: {
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
+  }
 );
 // export const Book=mongoose.model('Book',bookSchema)
-module.exports = mongoose.model('Book', bookSchema);
+module.exports = mongoose.model("Book", bookSchema);
