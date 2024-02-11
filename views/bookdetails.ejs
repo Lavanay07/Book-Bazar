@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Details</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -252,6 +254,7 @@ body, h1, h2, p {
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 
 <script>
+    const socket = io();
     function buyNow() {
         var title = '<%= book.title %>';
         var price = '<%= book.price %>';
@@ -260,9 +263,20 @@ body, h1, h2, p {
         window.location.href = "newPage.html?title=" + encodeURIComponent(title) + "&price=" + encodeURIComponent(price) + "&image=" + encodeURIComponent(image) + "&mail=" + encodeURIComponent(mail);
     }
       function chatWithOwner(ownerName) {
+         const buyerName = "YourBuyerUsername"; // You may want to get this dynamically
         // Implement your chat functionality here, using the ownerName
         alert("Chat with " + ownerName);
+        // Emit a 'chat' event to the server
+        socket.emit('chat', {
+            owner: ownerName,
+            message: 'Hi, let\'s chat about the book!'
+        });
     }
+     // Listen for 'chat' events from the server
+    socket.on('chat', (data) => {
+        console.log(`New message from ${data.buyer}: ${data.message}`);
+        // Implement logic to display the message on the frontend
+    });
 </script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 
