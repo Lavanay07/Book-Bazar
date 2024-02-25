@@ -53,12 +53,10 @@ router.post("/register", async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "User with this email already exists.",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "User with this email already exists.",
+      });
     }
 
     // Hash the password before saving it
@@ -102,24 +100,20 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Authentication failed. User not found.",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Authentication failed. User not found.",
+      });
     }
 
     // Compare the provided password with the hashed password in the database
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res
-        .status(401)
-        .json({
-          success: false,
-          message: "Authentication failed. Incorrect password.",
-        });
+      return res.status(401).json({
+        success: false,
+        message: "Authentication failed. Incorrect password.",
+      });
     }
 
     // If authentication is successful, you can generate a JWT token here

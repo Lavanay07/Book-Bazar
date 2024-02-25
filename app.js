@@ -1,6 +1,4 @@
 const express = require("express");
-hello;
-//  decec
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require("express-session");
