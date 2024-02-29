@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
      <!-- <link rel="stylesheet" href="/styles.css"> -->
-    <!-- <link rel="stylesheet" href="/stylesss.css"> -->
+    <!-- <!-- <link rel="stylesheet" href="/stylesss.css">  -->
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/css/stylet.css">
 
     <style>
 /* Reset some default styling */
@@ -231,8 +232,11 @@ body, h1, h2, p {
                 <h5>Description: <%= book.description %>
                 </h5>
                  <h5>Owner: <%= book.user %></h5>
+                <!-- <a href="chat.html">Chat with owner</a> -->
+                <a href="chat.html?bookId=<%= book._id %>">Chat with owner</a>
 
-    <button onclick="chatWithOwner('<%= book.user %>')">Chat with Owner</button> <!-- Add this line for chat button -->
+
+    <!-- <button >Chat with Owner</button> Add this line for chat button -->
             </div>
         </div>
     </div>
@@ -262,21 +266,21 @@ body, h1, h2, p {
         var mail = '<%= book.userEmail %>';
         window.location.href = "newPage.html?title=" + encodeURIComponent(title) + "&price=" + encodeURIComponent(price) + "&image=" + encodeURIComponent(image) + "&mail=" + encodeURIComponent(mail);
     }
-      function chatWithOwner(ownerName) {
-         const buyerName = "YourBuyerUsername"; // You may want to get this dynamically
-        // Implement your chat functionality here, using the ownerName
-        alert("Chat with " + ownerName);
-        // Emit a 'chat' event to the server
-        socket.emit('chat', {
-            owner: ownerName,
-            message: 'Hi, let\'s chat about the book!'
-        });
-    }
-     // Listen for 'chat' events from the server
-    socket.on('chat', (data) => {
-        console.log(`New message from ${data.buyer}: ${data.message}`);
-        // Implement logic to display the message on the frontend
-    });
+    //   function chatWithOwner(ownerName) {
+    //      const buyerName = "YourBuyerUsername"; // You may want to get this dynamically
+    //     // Implement your chat functionality here, using the ownerName
+    //     alert("Chat with " + ownerName);
+    //     // Emit a 'chat' event to the server
+    //     socket.emit('chat', {
+    //         owner: ownerName,
+    //         message: 'Hi, let\'s chat about the book!'
+    //     });
+    // }
+    //  // Listen for 'chat' events from the server
+    // socket.on('chat', (data) => {
+    //     console.log(`New message from ${data.buyer}: ${data.message}`);
+    //     // Implement logic to display the message on the frontend
+    // });
 </script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 
