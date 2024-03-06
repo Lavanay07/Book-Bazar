@@ -5,7 +5,7 @@ const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
 
-// Retrieve the book ID from the URL query parameters
+// // Retrieve the book ID from the URL query parameters
 const urlParams = new URLSearchParams(window.location.search);
 const bookId = urlParams.get("bookId");
 
@@ -56,12 +56,13 @@ function storeDetails() {
   fetch("/get-user")
     .then((response) => response.json())
     .then((data) => {
+      // console.log(data);
       fromUser = data.user.name; // Assuming your response contains the details of the currently logged-in user
 
       // Extract bookId from the URL
       const queryParams = new URLSearchParams(window.location.search);
       const bookId = queryParams.get("bookId");
-
+      // toUser = bookId;
       // Fetch the owner's name based on the bookId
       fetch(`/books/owner/${bookId}`) // Assuming you have a route to fetch the owner's details
         .then((response) => response.json())
@@ -69,11 +70,18 @@ function storeDetails() {
           toUser = data.owner.name; // Assuming your response contains the owner's name
 
           // Emit details of established chat
+          element = document.querySelectorAll(".chat-messages");
+          if (toUser == fromUser) {
+            alert("NOOO");
+            return;
+          }
           socket.emit("userDetails", { fromUser, toUser, bookId });
         })
         .catch((error) => {
           console.error("Error fetching owner details:", error);
         });
+      // element = document.querySelectorAll(".chat-messages");
+      // socket.emit("userDetails", { fromUser, toUser });
     })
     .catch((error) => {
       console.error("Error fetching user details:", error);

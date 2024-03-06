@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout Page</title>
     <script src="https://smtpjs.com/v3/smtp.js"></script>
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"
+      integrity="sha512-NQfB/bDaB8kaSXF8E77JjhHG5PM6XVRxvHzkZiwl3ddWCEPBa23T76MuWSwAJdMGJnmQqM0VeY9kFszsrBEFrQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <style>
       body {
         font-family: "Arial", sans-serif;
@@ -53,7 +59,7 @@
         cursor: pointer;
       }
     </style>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
   </head>
 
   <body>
@@ -75,20 +81,27 @@
     </div>
 
     <script>
+      console.log("oooo2");
       function getParameterByName(name, url) {
         if (!url) url = window.location.href;
+        // console.log("URL:", url); // Debugging: Log the URL
         name = name.replace(/[\[\]]/g, "\\$&");
         var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
           results = regex.exec(url);
+        // console.log("Results:", results); // Debugging: Log the results
         if (!results) return null;
         if (!results[2]) return "";
         return decodeURIComponent(results[2].replace(/\+/g, " "));
       }
 
+      console.log("oooo1");
+
       var title = getParameterByName("title");
       var price = getParameterByName("price");
       var image = getParameterByName("image");
-      var mail = getParameterByName("mail");
+      var Ownermail = getParameterByName("mail");
+      console.log("oooo");
+      console.log(Ownermail);
       // var mail='rahulrka9@gmail.com';
 
       var razorpay = new Razorpay({
@@ -97,21 +110,37 @@
         name: title,
         description: "Purchase Description",
         image: image,
-        handler: function (response) {
-          Email.send({
-            Host: "smtp.gmail.com",
-            Username: "bookbazaar959@gmail.com",
+        handler: async function (response) {
+          const address = document.getElementById("address").value;
+          const city = document.getElementById("city").value;
+          const zipcode = document.getElementById("zipcode").value;
+          const res = await axios.get("/get-user");
+          console.log("HIIIIIIIIIII");
+          console.log(res.data);
+          const CustomerEmail = res.data.user.email;
+          console.log(CustomerEmail);
+          const data = {
+            email: CustomerEmail,
+            address: `${address}, ${city}, ${zipcode}`,
+          };
 
-            Password: "konr fuuw tfla pmoj",
-            To: mail,
-            From: "bookbazaar959@gmail.com",
-            Subject: "New book purchase",
-            Body:
-              "A new book has been purchased. The payment ID is " +
-              response.razorpay_payment_id,
-          }).then((message) => alert("mail sent successfully"));
-
-          window.location.href = "/";
+          fetch("/auth/payment-success", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              alert("Email sent successfully!"); // Assuming the email sending is successful
+              // window.location.href = "/";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("Failed to send request. Please try again later.");
+            });
         },
         prefill: {
           name: "Customer Name",

@@ -298,18 +298,37 @@ router.post("/subscribe", async (req, res) => {
   }
 });
 
+// // Endpoint to handle successful payments
+// router.post("/payment-success", async (req, res) => {
+//   const { email, address, customerId } = req.body;
+//   try {
+//     res.json({ message: "owmer" });
+//     sendEmail(
+//       email,
+//       "owmer Book Bazaar",
+//       `Thank you for your purchase! Your order will be shipped to the following address: ${address}`
+//     );
+//   } catch (error) {
+//     res.status(500).json({ message: "Error" });
+//   }
+// });
+
 // Endpoint to handle successful payments
 router.post("/payment-success", async (req, res) => {
-  const { email, address, customerId } = req.body;
+  const { email, address } = req.body; // Extract email and address from the request body
+
   try {
-    res.json({ message: "owmer" });
+    // Send an email to the customer
     sendEmail(
       email,
-      "owmer Book Bazaar",
+      "Thank You for Your Purchase!",
       `Thank you for your purchase! Your order will be shipped to the following address: ${address}`
     );
+
+    res.json({ success: true, message: "Email sent successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error" });
+    console.error("Error sending email:", error);
+    res.status(500).json({ success: false, message: "Error sending email" });
   }
 });
 

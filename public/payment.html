@@ -75,17 +75,24 @@
     <script>
       function getParameterByName(name, url) {
         if (!url) url = window.location.href;
+        console.log("URL:", url); // Debugging: Log the URL
         name = name.replace(/[\[\]]/g, "\\$&");
         var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
           results = regex.exec(url);
+        console.log("Results:", results); // Debugging: Log the results
         if (!results) return null;
         if (!results[2]) return "";
         return decodeURIComponent(results[2].replace(/\+/g, " "));
       }
 
+      var title = getParameterByName("title");
+      var price = getParameterByName("price");
+      var image = getParameterByName("image");
+      var email = getParameterByName("email");
+      console.log("oooo");
+      console.log(email);
       var total = getParameterByName("total");
       var logoPath = getParameterByName("logo");
-
       var razorpay = new Razorpay({
         key: "rzp_test_paJFn0saN0ICxG",
         amount: total * 100,

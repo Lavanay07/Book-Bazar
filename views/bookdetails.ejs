@@ -264,6 +264,10 @@ body, h1, h2, p {
         var price = '<%= book.price %>';
         var image = '<%= book.image %>';
         var mail = '<%= book.userEmail %>';
+         console.log("Title:", title);
+    console.log("Price:", price);
+    console.log("Image:", image);
+    console.log("Mail:", mail);
         window.location.href = "newPage.html?title=" + encodeURIComponent(title) + "&price=" + encodeURIComponent(price) + "&image=" + encodeURIComponent(image) + "&mail=" + encodeURIComponent(mail);
     }
     //   function chatWithOwner(ownerName) {
