@@ -281,7 +281,7 @@ io.on("connection", (socket) => {
           client.close();
           return;
         }
-        console.log("User " + userID + " went offline...");
+        // console.log("User " + userID + " went offline...");
         client.close();
       });
     });

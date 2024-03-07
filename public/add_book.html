@@ -9,7 +9,6 @@
         font-family: "Poppins", sans-serif;
         background-image: url("./image/addbook1.jpeg");
         background-size: contain;
-        /* background-position: center; */
         background-repeat: no-repeat;
         min-height: 100vh;
         margin: 0;
@@ -21,7 +20,7 @@
       #book-form-container {
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: 9px;
-        padding: 20px; /* Reduced padding */
+        padding: 20px;
         padding-right: 50px;
         padding-left: 30px;
         margin-left: 60%;
@@ -71,6 +70,7 @@
         background-color: green;
         cursor: pointer;
       }
+
       #success-message {
         display: none;
         color: green;
@@ -84,6 +84,7 @@
         font-weight: bold;
         margin-top: 10px;
       }
+
       a[href="/"] {
         display: inline-block;
         margin-top: 10px;
@@ -114,15 +115,6 @@
           <label for="title">Title:</label>
           <input type="text" id="title" name="title" required />
         </div>
-        <!-- <div class="form-group">
-          <label for="user">User Name:</label>
-          <input type="text" id="user" name="user" required />
-        </div> -->
-        <!-- 
-        <div class="form-group">
-          <label for="title">Title:</label>
-          <input type="text" id="title" name="title" required />
-        </div> -->
         <div class="form-group">
           <label for="author">Author:</label>
           <input type="text" id="author" name="author" required />
@@ -162,25 +154,29 @@
           <label for="price">Price:</label>
           <input type="number" id="price" name="price" step="0.01" required />
         </div>
+        <div class="form-group">
+          <label for="quantity">Quantity:</label>
+          <input type="number" id="quantity" name="quantity" required />
+        </div>
         <button type="submit">Add Book</button>
         <a href="/">Home</a>
       </form>
       <p id="success-message"></p>
       <p id="error-message"></p>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
       $("#book-form").on("submit", function (e) {
         e.preventDefault();
 
         var formData = new FormData(this);
-        console.log(formData);
+
         $.ajax({
           url: "/books/addbook",
           type: "POST",
           data: formData,
           success: function (data) {
-            console.log(data);
             if (data.success) {
               $("#success-message").text(data.message).show();
               $("#book-form")[0].reset();
@@ -188,31 +184,10 @@
               $("#error-message").text(data.message).show();
             }
           },
-          error: function (xhr, status, error) {
-            console.error("AJAX Error:", status, error);
-          },
           cache: false,
           contentType: false,
           processData: false,
         });
-
-        // $.ajax({
-        //   url: "/books/addbook",
-        //   type: "POST",
-        //   data: formData,
-        //   success: function (data) {
-        //     console.log(data);
-        //     if (data.success) {
-        //       $("#success-message").text(data.message).show();
-        //       $("#book-form")[0].reset();
-        //     } else {
-        //       $("#error-message").text(data.message).show();
-        //     }
-        //   },
-        //   cache: false,
-        //   contentType: false,
-        //   processData: false,
-        // });
       });
     </script>
   </body>

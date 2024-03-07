@@ -5,7 +5,7 @@ const multer = require("multer");
 const { spawn } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const User = require("../models/User"); // Import the User model
+const User = require("../models/User");
 
 // Configure multer for handling file uploads
 const storage = multer.diskStorage({
@@ -59,15 +59,10 @@ router.post(
         price,
         publisher,
         language,
+        quantity,
       } = req.body;
       const user = req.session.user.name;
 
-      // const imagePath = `/uploads/${req.uniqueFilename}`;
-
-      // Save the image file
-      // const filename = path.join(__dirname, '/uploads/', req.file.originalname);
-      // req.file.save(filename);
-      // Get the path of the saved file
       const filename = `/uploads/${req.uniqueFilename}`;
 
       // Call the Python script to process the image
@@ -86,14 +81,6 @@ router.post(
             .json({ success: false, message: "Internal server error." });
         }
 
-        // // Delete the original image file
-        // fs.unlink(filename, (err) => {
-        //     if (err) {
-        //         console.error('Error:', err);
-        //         return res.status(500).json({ success: false, message: 'Internal server error.' });
-        //     }
-        // });
-
         // Create a new book object (assuming you have a schema and model for books in your database)
         const newBook = new Book({
           user,
@@ -106,8 +93,8 @@ router.post(
           language,
           image: filename, // Save the path to the processed image in the database
           userEmail,
+          quantity,
         });
-        console.log(newBook);
 
         // Save the book to the database
         await newBook.save();
@@ -121,6 +108,47 @@ router.post(
       res
         .status(500)
         .json({ success: false, message: "Internal server error." });
+    }
+  }
+);
+
+// Route to get all book details
+router.get("/Books", async (req, res) => {
+  try {
+    const books = await Book.find();
+    // console.log(books);
+    if (books) {
+      res.render("products", { loading: false, products: books });
+    } else {
+      res.status(404).send("No books found");
+    }
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+router.post(
+  "/upload-profile-pic",
+  isAuthenticated,
+  upload.single("profilePic"),
+  async (req, res) => {
+    try {
+      // Find the user and update their profilePic field
+      const updatedUser = await User.findOneAndUpdate(
+        { email: req.session.user.email },
+        { profilePic: "/uploads/" + req.file.filename },
+        { new: true } // This option returns the updated document
+      );
+
+      if (!updatedUser) {
+        return res.status(404).send("User not found");
+      }
+
+      // res.send('Success: File Uploaded!');
+      res.redirect("/userprofile");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("An error occurred while uploading the file.");
     }
   }
 );

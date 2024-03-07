@@ -16,6 +16,7 @@ const bookSchema = new mongoose.Schema(
     language: String,
     image: String,
     userEmail: String,
+    quantity: Number,
   },
   {
     timestamps: {

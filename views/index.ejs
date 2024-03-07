@@ -24,10 +24,6 @@
 
         <a href="/" class="logo"> <i class="fas fa-book"></i> Book Bazaar </a>
 
-        <!-- <form action="" class="search-form">
-            <input type="search" name="" placeholder="search here..." id="search-box">
-            <label for="search-box" class="fas fa-search"></label>
-        </form> -->
         <form action="/search" class="search-form" method="GET">
             <input type="search" name="q" placeholder="search here..." id="search-box">
             <label for="search-box" class="fas fa-search"></label>
@@ -39,7 +35,7 @@
             <div id="search-btn" class="fas fa-search"></div>
 
             <a href="#" id="add-book-link" class="fas fa-plus-square"></a>
-            <!-- <a href="#" class="fas fa-heart"></a> -->
+            <a href="#" class="fas fa-heart"></a>
             <a href="#" class="fas fa-shopping-cart"></a>
             
             <div id="login-btn" class="fas fa-user" onclick="toggleDropdown()"></div>
@@ -55,27 +51,6 @@
                     </ul>
                 </div>
             <% } %>
-
-            <!-- <% if (user) { %>
-                <div class="fas fa-user" onclick="document.getElementById('account-options').style.display='block'"></div>
-                <div id="account-options">
-                    <div class="user-profile">
-                  
-                        <span>Welcome, <%= user.name %></span>
-                    </div>
-                    <ul>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Orders</a></li>
-                        <li><button id="logoutButton">Logout</button></li>
-                        
-                    </ul>
-                </div>
-            <% } else { %> -->
-                <!-- User is not logged in, show default action -->
-                <!-- <a href="/auth/login" id="login-btn" class="fas fa-user"></a> -->
-                <!-- <div id="login-btn" class="fas fa-user"></div>
-            <% } %> -->
-            <!-- <div id="login-btn" class="fas fa-user"></div> -->
         </div>
         
 
@@ -181,9 +156,6 @@
 </div>
 
             
-            
-
-
             <img src="/image/stand.png" class="stand" alt="">
         </div>
 
@@ -246,7 +218,7 @@
                 <div class="swiper-slide box">
                     <div class="icons">
                         <a href="#" class="fas fa-search"></a>
-                        <!-- <a href="#" class="fas fa-heart"></a> -->
+                        <a href="#" class="fas fa-heart"></a>
                         <a href="#" class="fas fa-shopping-cart open-cart-btn"></a>
                     </div>
                     <!-- <div class="image">
@@ -258,7 +230,7 @@
                     </div>
                     <div class="content">
                         <h3><%= book.title %></h3>
-                        <div class="price">₹<%= book.price %> <span>₹400</span></div>
+                        <div class="price">₹<%= book.price %></div>
                         <button class="btn add-to-cart" data-name="<%= book.title %>" data-price="<%= book.price %>" data-image="<%= book.image %>">Add to Cart</button>
                     </div>
                 </div>
