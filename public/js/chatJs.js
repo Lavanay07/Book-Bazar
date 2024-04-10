@@ -58,7 +58,7 @@ function storeDetails() {
     .then((data) => {
       // console.log(data);
       fromUser = data.user.name; // Assuming your response contains the details of the currently logged-in user
-
+      // console.log(fromUser);
       // Extract bookId from the URL
       const queryParams = new URLSearchParams(window.location.search);
       const bookId = queryParams.get("bookId");

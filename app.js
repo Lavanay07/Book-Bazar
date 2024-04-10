@@ -91,6 +91,7 @@ app.get("/add_book", (req, res) => {
 });
 
 app.get("/get-user", (req, res) => {
+  console.log("Session user:", req.session.user);
   if (req.session.user) {
     res.send({ user: req.session.user });
   } else {

@@ -136,7 +136,6 @@ body, h1, h2, p {
             <div id="search-btn" class="fas fa-search" onclick="document.forms[0].submit()"></div>
 
             <div class="icons">
-                
                 <div id="search-btn" class="fas fa-search"></div>
 
                 <a href="#" id="add-book-link" class="fas fa-plus-square"></a>
@@ -234,7 +233,9 @@ body, h1, h2, p {
                 </h5>
                  <h5>Owner: <%= book.user %></h5>
                 <!-- <a href="chat.html">Chat with owner</a> -->
+                <!-- <a href="chat.html?bookId=<%= book._id %>">Chat with owner</a> -->
                 <a href="chat.html?bookId=<%= book._id %>">Chat with owner</a>
+
 
 
     <!-- <button >Chat with Owner</button> Add this line for chat button -->
