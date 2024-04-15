@@ -234,11 +234,9 @@ body, h1, h2, p {
                  <h5>Owner: <%= book.user %></h5>
                 <!-- <a href="chat.html">Chat with owner</a> -->
                 <!-- <a href="chat.html?bookId=<%= book._id %>">Chat with owner</a> -->
-                <a href="chat.html?bookId=<%= book._id %>">Chat with owner</a>
+                <a href="chat.html?username=<%= book.user %>&bookId=<%= book._id %>">Chat with owner</a>
 
 
-
-    <!-- <button >Chat with Owner</button> Add this line for chat button -->
             </div>
         </div>
     </div>
@@ -249,10 +247,6 @@ body, h1, h2, p {
         </div>
         </div>
     </div>
-
-
-
-
     <script src="/style.js"></script>
     <script src="/add_book.js"></script>
     <script src="/cart.js"></script>
@@ -267,26 +261,11 @@ body, h1, h2, p {
         var image = '<%= book.image %>';
         var mail = '<%= book.userEmail %>';
          console.log("Title:", title);
-    console.log("Price:", price);
-    console.log("Image:", image);
-    console.log("Mail:", mail);
-        window.location.href = "newPage.html?title=" + encodeURIComponent(title) + "&price=" + encodeURIComponent(price) + "&image=" + encodeURIComponent(image) + "&mail=" + encodeURIComponent(mail);
+         console.log("Price:", price);
+         console.log("Image:", image);
+         console.log("Mail:", mail);
+         window.location.href = "newPage.html?title=" + encodeURIComponent(title) + "&price=" + encodeURIComponent(price) + "&image=" + encodeURIComponent(image) + "&mail=" + encodeURIComponent(mail);
     }
-    //   function chatWithOwner(ownerName) {
-    //      const buyerName = "YourBuyerUsername"; // You may want to get this dynamically
-    //     // Implement your chat functionality here, using the ownerName
-    //     alert("Chat with " + ownerName);
-    //     // Emit a 'chat' event to the server
-    //     socket.emit('chat', {
-    //         owner: ownerName,
-    //         message: 'Hi, let\'s chat about the book!'
-    //     });
-    // }
-    //  // Listen for 'chat' events from the server
-    // socket.on('chat', (data) => {
-    //     console.log(`New message from ${data.buyer}: ${data.message}`);
-    //     // Implement logic to display the message on the frontend
-    // });
 </script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 

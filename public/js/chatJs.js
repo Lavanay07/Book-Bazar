@@ -1,116 +1,78 @@
 const socket = io();
 const chatForm = document.getElementById("chat-form");
 const chatMessages = document.querySelector(".chat-messages");
-const { username, room } = Qs.parse(location.search, {
-  ignoreQueryPrefix: true,
-});
 
-// // Retrieve the book ID from the URL query parameters
+// Retrieve the username and bookId from the URL query parameters
 const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get("username");
 const bookId = urlParams.get("bookId");
+let roomId = "ABCD";
+let loggedInUser = "ABCD";
+let loggedInUserId = "BCD";
+
+console.log("username:", username);
+console.log("bookId:", bookId);
 
 let fromUser = "John";
 let toUser = "Maria";
 
-// function storeDetails() {
-//   // fromUser = document.getElementById("from").value;
-//   // console.log(data.user.name);
-//   fetch("/get-user") // Assuming you have a route to fetch user details
-//     //  console.log(data.user.name);
-//     .then((response) => response.json())
-//     .then((data) => {
-//       const fromUser = data.user.name; // Assuming your response contains the details of the currently logged-in user
-//       console.log(fromUser);
-//       // const toUser = { name: toUserInput }; // Assuming 'toUserInput' is the recipient's name
+async function chatExecute() {
+  console.log("start");
+  try {
+    const response = await fetch("/get-user");
+    const data = await response.json();
 
-//       // Emit details of established chat
-//       // socket.emit("userDetails", { fromUser, toUser, bookId });
-//     })
-//     .catch((error) => {
-//       console.error("Error fetching user details:", error);
-//     });
-
-//   // toUser = document.getElementById("to").value;
-//   // Extract bookId from the URL
-//   const queryParams = new URLSearchParams(window.location.search);
-//   const bookId = queryParams.get("bookId");
-
-//   // Fetch the owner's name based on the bookId
-//   fetch(`/books/owner/${bookId}`) // Assuming you have a route to fetch the owner's details
-//     .then((response) => response.json())
-//     .then((data) => {
-//       const toUser = data.owner.name; // Assuming your response contains the owner's name
-
-//       // Set the owner's name to the 'to' field
-//       // document.getElementById("to").value = ownerName;
-//     })
-//     .catch((error) => {
-//       console.error("Error fetching owner details:", error);
-//     });
-
-//   element = document.querySelectorAll(".chat-messages");
-//   socket.emit("userDetails", { fromUser, toUser, bookId }); //emits details of established chat
-// }
-function storeDetails() {
-  // Fetch the currently logged-in user (fromUser)
-  fetch("/get-user")
-    .then((response) => response.json())
-    .then((data) => {
-      // console.log(data);
-      fromUser = data.user.name; // Assuming your response contains the details of the currently logged-in user
-      // console.log(fromUser);
-      // Extract bookId from the URL
-      const queryParams = new URLSearchParams(window.location.search);
-      const bookId = queryParams.get("bookId");
-      // toUser = bookId;
-      // Fetch the owner's name based on the bookId
-      fetch(`/books/owner/${bookId}`) // Assuming you have a route to fetch the owner's details
-        .then((response) => response.json())
-        .then((data) => {
-          toUser = data.owner.name; // Assuming your response contains the owner's name
-
-          // Emit details of established chat
-          element = document.querySelectorAll(".chat-messages");
-          if (toUser == fromUser) {
-            alert("NOOO");
-            return;
-          }
-          socket.emit("userDetails", { fromUser, toUser, bookId });
-        })
-        .catch((error) => {
-          console.error("Error fetching owner details:", error);
-        });
-      // element = document.querySelectorAll(".chat-messages");
-      // socket.emit("userDetails", { fromUser, toUser });
-    })
-    .catch((error) => {
-      console.error("Error fetching user details:", error);
-    });
-}
-
-function storeTo() {
-  console.log(toUser);
+    if (data.user) {
+      loggedInUserId = data.user._id;
+      loggedInUser = data.user.name;
+      fromUser = loggedInUser;
+      toUser = username;
+      roomId = `${loggedInUserId}+${bookId}`;
+      console.log("loggedInUser:", loggedInUser);
+      console.log("loggedInUserId:", loggedInUserId);
+      console.log("roomId:", roomId);
+      console.log("fromUser:", fromUser);
+      console.log("toUser:", toUser);
+      console.log("username:", username);
+      socket.emit("userDetails", { fromUser, toUser, bookId });
+      // if (toUser == fromUser) {
+      //   alert("NOOO");
+      //   return;
+      // }
+    } else {
+      console.error("User is not logged in");
+    }
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+  }
 }
 
 //Submit message
 chatForm.addEventListener("submit", (e) => {
-  e.preventDefault(); //Prevents default logging to a file
+  e.preventDefault();
   const msg = e.target.elements.msg.value;
+  console.log("message:", msg);
   final = {
     fromUser: fromUser,
     toUser: toUser,
     msg: msg,
-    bookId,
+    bookId: bookId,
   };
+  // **** pending
+  console.log("here12");
   socket.emit("chatMessage", final); //emits chat message along with sender and reciever to server
+  console.log("here22");
   document.getElementById("msg").value = " ";
 });
 
-socket.on("output", (data) => {
-  console.log(data);
-});
+// socket.on("output", (data) => {
+//   console.log("here1111");
+//   console.log(data);
+// });
 
 socket.on("output", (data) => {
+  // console.log("DATAAA");
+  // console.log(data);
   //recieves the entire chat history upon logging in between two users and displays them
   for (var i = 0; i < data.length; i++) {
     outputMessage(data[i]);
