@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Details</title>
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <!-- <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script> -->
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
@@ -247,6 +247,42 @@ body, h1, h2, p {
         </div>
         </div>
     </div>
+
+    <!-- Star Rating -->
+<div class="star-rating">
+  <div class="stars">
+    <span class="star" data-rating="1">&#9733;</span>
+    <span class="star" data-rating="2">&#9733;</span>
+    <span class="star" data-rating="3">&#9733;</span>
+    <span class="star" data-rating="4">&#9733;</span>
+    <span class="star" data-rating="5">&#9733;</span>
+  </div>
+  <div class="rating-value"></div>
+</div>
+
+<!-- Review Form -->
+<form id="review-form">
+  <div>
+    <label for="rating">Your Rating:</label>
+    <select name="rating" id="rating">
+      <option value="1">1 Star</option>
+      <option value="2">2 Stars</option>
+      <option value="3">3 Stars</option>
+      <option value="4">4 Stars</option>
+      <option value="5">5 Stars</option>
+    </select>
+  </div>
+  <div>
+    <label for="review">Your Review:</label>
+    <textarea name="review" id="review" rows="4"></textarea>
+  </div>
+  <button type="submit">Submit Review</button>
+</form>
+
+<!-- Display Reviews -->
+<div id="reviews-container">
+  <!-- Reviews will be dynamically added here -->
+</div>
     <script src="/style.js"></script>
     <script src="/add_book.js"></script>
     <script src="/cart.js"></script>
@@ -254,7 +290,7 @@ body, h1, h2, p {
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 
 <script>
-    const socket = io();
+    // const socket = io();
     function buyNow() {
         var title = '<%= book.title %>';
         var price = '<%= book.price %>';
@@ -266,6 +302,120 @@ body, h1, h2, p {
          console.log("Mail:", mail);
          window.location.href = "newPage.html?title=" + encodeURIComponent(title) + "&price=" + encodeURIComponent(price) + "&image=" + encodeURIComponent(image) + "&mail=" + encodeURIComponent(mail);
     }
+</script>
+
+
+<script>
+    // Frontend JavaScript (script.js)
+
+document.addEventListener('DOMContentLoaded', function() {
+  const stars = document.querySelectorAll('.star');
+  const ratingValue = document.querySelector('.rating-value');
+  const reviewForm = document.getElementById('review-form');
+  const reviewsContainer = document.getElementById('reviews-container');
+  const bookId = '<%= book._id %>'; // Replace this with the actual book ID
+
+  // Event listener for clicking on stars
+  stars.forEach(function(star) {
+    star.addEventListener('click', function() {
+      const rating = parseInt(star.getAttribute('data-rating'));
+      ratingValue.innerHTML = 'You rated this ' + rating + ' stars.';
+
+      // Send rating to backend
+      fetch(`/books/${bookId}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ rating }),
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to submit rating');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Handle successful response
+        console.log('Rating submitted successfully');
+        // Optionally, update the UI to reflect the new rating
+      })
+      .catch(error => {
+        console.error('Error submitting rating:', error);
+        // Handle error
+      });
+    });
+  });
+
+  // Event listener for submitting review form
+  reviewForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const rating = parseInt(document.getElementById('rating').value);
+    const reviewText = document.getElementById('review').value;
+
+    // Send review to backend
+    fetch(`/books/${bookId}/reviews`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ rating, reviewText }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to submit review');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Handle successful response
+      console.log('Review submitted successfully');
+      // Optionally, update the UI to display the new review
+    })
+    .catch(error => {
+      console.error('Error submitting review:', error);
+      // Handle error
+    });
+
+    // Clear the form after submission
+    reviewForm.reset();
+  });
+
+  // Function to fetch and display reviews for the book
+  function fetchReviews() {
+    fetch(`/books/${bookId}/reviews`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch reviews');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Clear previous reviews
+        reviewsContainer.innerHTML = '';
+
+        // Display fetched reviews
+        data.reviews.forEach(review => {
+          const reviewElement = document.createElement('div');
+          reviewElement.classList.add('review');
+          reviewElement.innerHTML = `
+            <h4>${review.user}</h4>
+            <p>Rating: ${review.rating}</p>
+            <p>${review.reviewText}</p>
+          `;
+          reviewsContainer.appendChild(reviewElement);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching reviews:', error);
+        // Handle error
+      });
+  }
+
+  // Fetch and display reviews when the page loads
+  fetchReviews();
+});
+
 </script>
     <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 

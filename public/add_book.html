@@ -167,8 +167,24 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+      const forbiddenWords = ["sex", "porn", "nudity"];
       $("#book-form").on("submit", function (e) {
         e.preventDefault();
+        var title = $("#title").val().toLowerCase();
+        console.log(title);
+
+        var containsForbiddenWord = forbiddenWords.some((word) =>
+          title.includes(word)
+        );
+        console.log(containsForbiddenWord);
+        if (containsForbiddenWord) {
+          $("#error-message")
+            .text("Title cannot contain inappropriate words.")
+            .show();
+          event.preventDefault();
+          alert("Title cannot contain inappropriate words.");
+          return;
+        }
 
         var formData = new FormData(this);
 

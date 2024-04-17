@@ -10,14 +10,14 @@ let roomId = "ABCD";
 let loggedInUser = "ABCD";
 let loggedInUserId = "BCD";
 
-console.log("username:", username);
-console.log("bookId:", bookId);
+// console.log("username:", username);
+// console.log("bookId:", bookId);
 
 let fromUser = "John";
 let toUser = "Maria";
 
 async function chatExecute() {
-  console.log("start");
+  // console.log("start");
   try {
     const response = await fetch("/get-user");
     const data = await response.json();
@@ -28,12 +28,12 @@ async function chatExecute() {
       fromUser = loggedInUser;
       toUser = username;
       roomId = `${loggedInUserId}+${bookId}`;
-      console.log("loggedInUser:", loggedInUser);
-      console.log("loggedInUserId:", loggedInUserId);
-      console.log("roomId:", roomId);
-      console.log("fromUser:", fromUser);
-      console.log("toUser:", toUser);
-      console.log("username:", username);
+      // console.log("loggedInUser:", loggedInUser);
+      // console.log("loggedInUserId:", loggedInUserId);
+      // console.log("roomId:", roomId);
+      // console.log("fromUser:", fromUser);
+      // console.log("toUser:", toUser);
+      // console.log("username:", username);
       socket.emit("userDetails", { fromUser, toUser, bookId });
       // if (toUser == fromUser) {
       //   alert("NOOO");
@@ -50,8 +50,11 @@ async function chatExecute() {
 //Submit message
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
+  // chatExecute();
   const msg = e.target.elements.msg.value;
-  console.log("message:", msg);
+  if (!msg) return;
+
+  // console.log("message:", msg);
   final = {
     fromUser: fromUser,
     toUser: toUser,
@@ -59,10 +62,11 @@ chatForm.addEventListener("submit", (e) => {
     bookId: bookId,
   };
   // **** pending
-  console.log("here12");
+  // console.log("here12");
   socket.emit("chatMessage", final); //emits chat message along with sender and reciever to server
-  console.log("here22");
+  // console.log("here22");
   document.getElementById("msg").value = " ";
+  // chatExecute();
 });
 
 // socket.on("output", (data) => {
@@ -83,8 +87,9 @@ socket.on("output", (data) => {
 socket.on("message", (data) => {
   //recieves a message and displays it
   outputMessage(data);
-  console.log(data);
+  // console.log(data);
   chatMessages.scrollTop = chatMessages.scrollHeight;
+  // location.reload();
 });
 
 function outputMessage(message) {
@@ -96,3 +101,7 @@ function outputMessage(message) {
     </p>`;
   document.querySelector(".chat-messages").appendChild(div);
 }
+
+document.addEventListener("DOMContentLoaded", function (event) {
+  chatExecute();
+});

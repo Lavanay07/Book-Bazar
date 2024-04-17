@@ -14,7 +14,7 @@ const socketIO = require("socket.io");
 const formatMessage = require("./utils/chatMessage");
 const mongoClient = require("mongodb").MongoClient;
 
-const dbname = "chatApp";
+const dbname = "Bookstore1";
 const chatCollection = "chats";
 const userCollection = "onlineUsers";
 const server = http.createServer(app);
@@ -91,7 +91,7 @@ app.get("/add_book", (req, res) => {
 });
 
 app.get("/get-user", (req, res) => {
-  console.log("Session user:", req.session.user);
+  // console.log("Sesssion user:", req.session.user);
   if (req.session.user) {
     res.send({ user: req.session.user });
   } else {
@@ -210,10 +210,12 @@ function connectToMongo(callback) {
 
 io.on("connection", (socket) => {
   // console.log("New User Logged In with ID " + socket.id);
-
+  // console.log("here33");
   socket.on("chatMessage", async (data) => {
+    // console.log("here34");
     const dataElement = formatMessage(data);
-
+    // console.log(dataElement);
+    // console.log(data.toUser);
     connectToMongo((client, db, onlineUsers, chat) => {
       chat.insertOne(dataElement, (err, res) => {
         if (err) {
@@ -223,22 +225,32 @@ io.on("connection", (socket) => {
         }
         socket.emit("message", dataElement);
         // console.log(data.toUser);
+        // console.log(onlineUsers);
+        // const ele = onlineUsers.findOne({ name: data.toUser });
+        // console.log("ELE");
+        // console.log(ele);
         onlineUsers.findOne({ name: data.toUser }, (err, res) => {
+          // console.log("ressss", res);
           if (err) {
             console.error("Failed to find online user:", err);
             client.close();
             return;
           }
-          if (res != null) socket.to(res.ID).emit("message", dataElement);
+          if (res != null) {
+            // console.log(res);
+            // location.reload();
+            socket.to(res.ID).emit("message", dataElement);
+            // location.reload();
+          }
         });
-        client.close();
+        // client.close();
       });
     });
   });
 
   socket.on("userDetails", async (data) => {
     connectToMongo((client, db, onlineUsers, currentCollection) => {
-      // console.log(data);
+      // const id = data.bookId;
       const onlineUser = {
         ID: socket.id,
         name: data.fromUser,
@@ -253,8 +265,8 @@ io.on("connection", (socket) => {
         currentCollection
           .find(
             {
-              from: { $in: [data.fromUser, data.toUser] },
-              to: { $in: [data.fromUser, data.toUser] },
+              // from: { $in: [data.fromUser, data.toUser] },
+              // to: { $in: [data.fromUser, data.toUser] },
               bookId: { $in: [data.bookId, data.bookId] },
             },
             { projection: { _id: 0 } }
@@ -272,21 +284,21 @@ io.on("connection", (socket) => {
     });
   });
 
-  const userID = socket.id;
-  socket.on("disconnect", () => {
-    connectToMongo((client, db, onlineUsers) => {
-      const myquery = { ID: userID };
-      onlineUsers.deleteOne(myquery, (err, res) => {
-        if (err) {
-          console.error("Failed to delete offline user:", err);
-          client.close();
-          return;
-        }
-        // console.log("User " + userID + " went offline...");
-        client.close();
-      });
-    });
-  });
+  //   const userID = socket.id;
+  //   socket.on("disconnect", () => {
+  //     connectToMongo((client, db, onlineUsers) => {
+  //       const myquery = { ID: userID };
+  //       onlineUsers.deleteOne(myquery, (err, res) => {
+  //         if (err) {
+  //           console.error("Failed to delete offline user:", err);
+  //           client.close();
+  //           return;
+  //         }
+  //         // console.log("User " + userID + " went offline...");
+  //         client.close();
+  //       });
+  //     });
+  //   });
 });
 
 server.listen(port, () => {
