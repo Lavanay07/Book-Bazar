@@ -21,6 +21,7 @@ const server = http.createServer(app);
 const io = socketIO(server);
 const database = "mongodb://127.0.0.1:27017/";
 const User = require("./models/User");
+const Rating = require("./models/Ratings");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/Bookstore1", {
@@ -194,6 +195,58 @@ app.get("/books/owner/:bookId", async (req, res) => {
   }
 });
 
+// Add this route to handle star rating submissions
+// API endpoint to fetch user's rating for a book
+app.get("/user-rating", async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const bookId = req.query.bookId;
+    const rating = await Rating.findOne({
+      userId: userId,
+      bookId: bookId,
+    }).select("rating");
+    res.json({ rating: rating ? rating.rating : null });
+  } catch (error) {
+    console.error("Error fetching user rating:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// API endpoint to submit rating for a book
+app.post("/rate-book", async (req, res) => {
+  try {
+    const userId = req.session.user._id;
+    const { bookId, rating } = req.body;
+
+    // Check if the user has already rated the book
+    const existingRating = await Rating.findOne({
+      userId: userId,
+      bookId: bookId,
+    });
+    if (existingRating) {
+      return res
+        .status(400)
+        .json({ error: "You have already rated this book" });
+    }
+
+    // Create a new Rating document
+    const newRating = new Rating({
+      userId: userId,
+      bookId: bookId,
+      rating: rating,
+    });
+
+    // Save the new rating to the database
+    await newRating.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "Rating submitted successfully" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 // Function to handle MongoDB connection
 function connectToMongo(callback) {
   mongoClient.connect(database, (err, client) => {

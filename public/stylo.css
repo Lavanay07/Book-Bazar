@@ -1,0 +1,128 @@
+body,
+h1,
+h2,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the main container */
+.big-contain {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px;
+}
+
+/* Style the book container */
+.book-container {
+  display: flex;
+}
+
+/* Style the book image */
+.book-image img {
+  max-width: 250px;
+  /* Increased image size */
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Style the book details */
+.book-details {
+  margin-left: 7rem;
+  margin-right: 15rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#book-p {
+  font-size: 20px;
+  /* Adjust as needed */
+  font-weight: bold;
+  border-color: black;
+}
+
+.book-details h3 {
+  margin-bottom: 20px;
+  /* Adjust as needed */
+}
+
+.book-details h5 {
+  margin-top: 15px;
+  /* Adjust as needed */
+}
+
+.book-details h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.book-details p {
+  margin-bottom: 5px;
+}
+
+/* Style the product details section */
+.book-details h3 {
+  font-size: 23px;
+  margin-top: 40px;
+}
+
+.book-details h5 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.bigger-contain {
+  /* border: solid 2px black; */
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+  padding: 0.5rem;
+  margin: 3rem;
+}
+
+/* Style the buy section */
+.buy-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  /* Align items to the start (left) */
+  margin-left: 20px;
+  /* Add margin to separate from book details */
+}
+
+.buy-section button {
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.buy-section button.add-to-cart {
+  background-color: #008cba;
+  margin-top: 22px;
+}
+
+.buy-section button:hover,
+.buy-section button.add-to-cart:hover {
+  background-color: #45a049;
+}
+
+.star-rating {
+  font-size: 24px;
+}
+
+.stars {
+  cursor: pointer;
+}
+
+.star {
+  color: gray;
+}
+
+.star.active {
+  color: gold;
+}
