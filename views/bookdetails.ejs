@@ -141,7 +141,6 @@
   <!-- Star Rating -->
   <div class="review-all">
     <div class="star-rating">
-
       <div class="stars">
         <span class="star" data-rating="1">&#9733;</span>
         <span class="star" data-rating="2">&#9733;</span>
@@ -149,21 +148,20 @@
         <span class="star" data-rating="4">&#9733;</span>
         <span class="star" data-rating="5">&#9733;</span>
       </div>
-
       <div class="rating-value"></div>
-
     </div>
 
     <div class="review-written">
       <textarea id="review" placeholder="Write your review here..."></textarea>
     </div>
 
-    <div class="btn">
+    <div class="btns">
       <button id="submit-review-btn">Submit</button>
     </div>
 
-      <div class="review-written-values"></div>
+    <div class="review-written-values"></div>
   </div>
+
 
   </div>
   <script src="/style.js"></script>
@@ -188,118 +186,96 @@
 
 
   <script>
-document.addEventListener('DOMContentLoaded', async function () {
-  const stars = document.querySelectorAll('.star');
-  const ratingValue = document.querySelector('.rating-value');
-  const reviewwrittenvalues = document.querySelector('.review-written-values');
-  const reviewTextarea = document.getElementById('review');
-  const submitReviewBtn = document.getElementById('submit-review-btn');
-  const reviewWrittenContainer = document.querySelector('.review-written');
-  const reviewAllContainer = document.querySelector('.review-all');
-  const reviewMsgContainer = document.createElement('div');
-  const bookId = '<%= book._id %>'; // Replace this with the actual book ID
+    document.addEventListener('DOMContentLoaded', async function () {
+      const stars = document.querySelectorAll('.star');
+      const ratingValue = document.querySelector('.rating-value');
+      const reviewwrittenvalues = document.querySelector('.review-written-values');
+      const reviewTextarea = document.getElementById('review');
+      const submitReviewBtn = document.getElementById('submit-review-btn');
+      const reviewWrittenContainer = document.querySelector('.review-written');
+      const reviewAllContainer = document.querySelector('.review-all');
+      const reviewMsgContainer = document.createElement('div');
+      const bookId = '<%= book._id %>'; // Replace this with the actual book ID
 
-  let userRating = null;
-  let reviewText = '';
+      let userRating = null;
+      let reviewText = '';
 
-  // Function to fetch the user's rating and review for the book
-  async function fetchUserRatingReview() {
-    try {
-      const response = await axios.get(`/user-rating-review?bookId=${bookId}`);
-      return response.data; // Returns user's rating and review or null if not rated
-    } catch (error) {
-      console.error("Error fetching user rating and review:", error);
-      return null;
-    }
-  }
-
-  // Check if the user has already rated and reviewed the book
-  const userRatingReview = await fetchUserRatingReview();
-  if (userRatingReview && userRatingReview.rating) {
-    userRating = userRatingReview.rating;
-    ratingValue.innerHTML = 'Your rating: ' + userRating + ' stars.';
-    updateStars(userRating);
-  }
-  if (userRatingReview && userRatingReview.review) {
-    reviewText = userRatingReview.review;
-    // reviewWrittenContainer.style.display = 'none'; // Hide review input box
-    // submitReviewBtn.style.display = 'none'; // Hide submit button
-    // btn.style.display='none';
-    // review-written.style.display='none';
-    // // reviewMsgContainer.textContent = reviewText;
-    document.querySelectorAll('.btn').forEach(btn => {
-  btn.style.display = 'none';
-});
-
-document.querySelectorAll('.review-written').forEach(reviewWritten => {
-  reviewWritten.style.display = 'none';
-})
-    reviewwrittenvalues.innerText=reviewText;
-    reviewAllContainer.appendChild(reviewwrittenvalues); // Append review message to container
-  }
-
-  stars.forEach(function (star) {
-    star.addEventListener('click', function () {
-      if (!userRating) {
-        const rating = parseInt(star.getAttribute('data-rating'));
-        ratingValue.innerHTML = 'You rated this ' + rating + ' stars.';
-        userRating = rating;
-        updateStars(userRating);
-
-        // Check if both rating and review are available to enable submit button
-        if (userRating && reviewText) {
-          submitReviewBtn.disabled = false;
-          submitReviewBtn.style.display = 'none';
+      // Function to fetch the user's rating and review for the book
+      async function fetchUserRatingReview() {
+        try {
+          const response = await axios.get(`/user-rating-review?bookId=${bookId}`);
+          return response.data; // Returns user's rating and review or null if not rated
+        } catch (error) {
+          console.error("Error fetching user rating and review:", error);
+          return null;
         }
       }
-    });
-  });
 
-  reviewTextarea.addEventListener('input', function () {
-    reviewText = reviewTextarea.value.trim();
-
-    // Check if both rating and review are available to enable submit button
-if (userRating && reviewText) {
-  submitReviewBtn.disabled = false;
-  submitReviewBtn.style.display = 'none';
-}
-  });
-
-  submitReviewBtn.addEventListener('click', function () {
-    // Make API call to submit rating and review to MongoDB
-    if (userRating && reviewText) {
-      axios.post('/submit-rating-review', {
-        userId: 'loggedInUserId', // Make sure to replace this with actual user ID
-        bookId: bookId,
-        rating: userRating,
-        review: reviewText
-      })
-        .then(response => {
-          console.log(response.data);
-          // Optionally, you can show a success message or redirect the user
-          // Hide review input box and submit button
-          reviewWrittenContainer.style.display = 'none';
-          submitReviewBtn.style.display = 'none';
-          reviewMsgContainer.textContent = reviewText;
-          reviewAllContainer.appendChild(reviewMsgContainer);
-        })
-        .catch(error => {
-          console.error(error);
+      // Check if the user has already rated and reviewed the book
+      const userRatingReview = await fetchUserRatingReview();
+      if (userRatingReview && userRatingReview.rating) {
+        userRating = userRatingReview.rating;
+        ratingValue.innerHTML = 'Your rating: ' + userRating + ' stars.';
+        updateStars(userRating);
+      }
+      if (userRatingReview && userRatingReview.review) {
+        reviewText = userRatingReview.review;
+        reviewwrittenvalues.innerText = reviewText;
+        reviewAllContainer.appendChild(reviewwrittenvalues);
+        document.querySelectorAll('.btns').forEach(btn => {
+          btn.style.display = 'none';
         });
-    }
-  });
+        document.querySelectorAll('.review-written').forEach(reviewWritten => {
+          reviewWritten.style.display = 'none';
+        });
+      }
 
-  function updateStars(rating) {
-    stars.forEach(function (s, index) {
-      if (index < rating) {
-        s.classList.add("active");
-      } else {
-        s.classList.remove("active");
+      stars.forEach(function (star) {
+        star.addEventListener('click', function () {
+          if (!userRating) {
+            const rating = parseInt(star.getAttribute('data-rating'));
+            ratingValue.innerHTML = 'You rated this ' + rating + ' stars.';
+            userRating = rating;
+            updateStars(userRating);
+          }
+        });
+      });
+
+      reviewTextarea.addEventListener('input', function () {
+        reviewText = reviewTextarea.value.trim();
+      });
+
+      submitReviewBtn.addEventListener('click', function () {
+        if (userRating && reviewText) {
+          axios.post('/submit-rating-review', {
+            userId: 'loggedInUserId',
+            bookId: bookId,
+            rating: userRating,
+            review: reviewText
+          })
+            .then(response => {
+              console.log("Review submitted successfully:", response.data);
+              reviewWrittenContainer.style.display = 'none';
+              submitReviewBtn.style.display = 'none';
+              reviewMsgContainer.textContent = reviewText;
+              reviewAllContainer.appendChild(reviewMsgContainer);
+            })
+            .catch(error => {
+              console.error("Error submitting review:", error);
+            });
+        }
+      });
+
+      function updateStars(rating) {
+        stars.forEach(function (s, index) {
+          if (index < rating) {
+            s.classList.add("active");
+          } else {
+            s.classList.remove("active");
+          }
+        });
       }
     });
-  }
-});
-
   </script>
   <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
