@@ -197,51 +197,56 @@ app.get("/books/owner/:bookId", async (req, res) => {
 
 // Add this route to handle star rating submissions
 // API endpoint to fetch user's rating for a book
-app.get("/user-rating", async (req, res) => {
+app.get("/user-rating-review", async (req, res) => {
   try {
     const userId = req.session.user._id;
     const bookId = req.query.bookId;
-    const rating = await Rating.findOne({
+    const ratingReview = await Rating.findOne({
       userId: userId,
       bookId: bookId,
-    }).select("rating");
-    res.json({ rating: rating ? rating.rating : null });
+    }).select("rating review");
+    res.json({
+      rating: ratingReview ? ratingReview.rating : null,
+      review: ratingReview ? ratingReview.review : null,
+    });
   } catch (error) {
-    console.error("Error fetching user rating:", error);
+    console.error("Error fetching user rating and review:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// API endpoint to submit rating for a book
-app.post("/rate-book", async (req, res) => {
+// API endpoint to submit rating and review for a book
+app.post("/submit-rating-review", async (req, res) => {
   try {
     const userId = req.session.user._id;
-    const { bookId, rating } = req.body;
+    const { bookId, rating, review } = req.body;
 
-    // Check if the user has already rated the book
-    const existingRating = await Rating.findOne({
+    // Check if the user has already rated and reviewed the book
+    const existingRatingReview = await Rating.findOne({
       userId: userId,
       bookId: bookId,
     });
-    if (existingRating) {
+    if (existingRatingReview) {
       return res
         .status(400)
-        .json({ error: "You have already rated this book" });
+        .json({ error: "You have already rated and reviewed this book" });
     }
 
     // Create a new Rating document
-    const newRating = new Rating({
+    const newRatingReview = new Rating({
       userId: userId,
       bookId: bookId,
       rating: rating,
+      review: review,
     });
 
-    // Save the new rating to the database
-    await newRating.save();
+    // Save the new rating and review to the database
+    await newRatingReview.save();
 
-    res
-      .status(200)
-      .json({ success: true, message: "Rating submitted successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Rating and review submitted successfully",
+    });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Internal server error" });
