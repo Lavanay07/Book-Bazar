@@ -247,6 +247,7 @@ app.post("/rate-book", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 // Function to handle MongoDB connection
 function connectToMongo(callback) {
   mongoClient.connect(database, (err, client) => {
