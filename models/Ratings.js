@@ -6,6 +6,10 @@ const ratingSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  username: {
+    type: String,
+    required: true,
+  },
   bookId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Book",
@@ -16,6 +20,10 @@ const ratingSchema = new mongoose.Schema({
     required: true,
   },
   review: {
+    type: String,
+    required: true,
+  },
+  bookimg: {
     type: String,
     required: true,
   },

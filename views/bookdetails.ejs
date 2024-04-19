@@ -196,6 +196,7 @@
       const reviewAllContainer = document.querySelector('.review-all');
       const reviewMsgContainer = document.createElement('div');
       const bookId = '<%= book._id %>'; // Replace this with the actual book ID
+      const image = '<%= book.image %>';
 
       let userRating = null;
       let reviewText = '';
@@ -251,7 +252,9 @@
             userId: 'loggedInUserId',
             bookId: bookId,
             rating: userRating,
-            review: reviewText
+            review: reviewText,
+            bookimg: image,
+            name: '<%= user.name %>'
           })
             .then(response => {
               console.log("Review submitted successfully:", response.data);

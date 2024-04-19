@@ -73,6 +73,9 @@ app.get("/", async (req, res) => {
   const user = req.session.user;
   try {
     let books;
+    let ratings;
+
+    // Fetch books from the database
     if (user) {
       books = await Book.find({}).exec();
       showDropdown = true;
@@ -80,7 +83,11 @@ app.get("/", async (req, res) => {
       books = await Book.find({}).exec();
       showDropdown = false;
     }
-    res.render("index", { user, books, showDropdown });
+
+    ratings = await Rating.find({}).exec();
+
+    // Render the index.ejs template with the fetched data
+    res.render("index", { user, books, ratings, showDropdown });
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ success: false, message: "Internal server error" });
@@ -219,7 +226,7 @@ app.get("/user-rating-review", async (req, res) => {
 app.post("/submit-rating-review", async (req, res) => {
   try {
     const userId = req.session.user._id;
-    const { bookId, rating, review } = req.body;
+    const { bookId, rating, review, bookimg, name } = req.body;
 
     // Check if the user has already rated and reviewed the book
     const existingRatingReview = await Rating.findOne({
@@ -238,6 +245,8 @@ app.post("/submit-rating-review", async (req, res) => {
       bookId: bookId,
       rating: rating,
       review: review,
+      bookimg: bookimg,
+      username: name,
     });
 
     // Save the new rating and review to the database
