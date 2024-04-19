@@ -60,6 +60,7 @@ router.post(
         publisher,
         language,
         quantity,
+        condition,
       } = req.body;
       const user = req.session.user.name;
 
@@ -94,6 +95,7 @@ router.post(
           image: filename, // Save the path to the processed image in the database
           userEmail,
           quantity,
+          condition,
         });
 
         // Save the book to the database

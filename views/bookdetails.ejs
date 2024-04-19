@@ -107,15 +107,12 @@
             <h1>
               <%= book.title %>
             </h1>
-
             <p id="book-p">Price: ₹<span id="book-price">
                 <%= book.price %>
               </span></p>
-
             <h3>Product Details</h3>
             <h5>Author: <%= book.author %>
             </h5>
-
             <h5>Publisher: <%= book.publisher %>
             </h5>
             <h5>Language: <%= book.language %>
@@ -124,11 +121,13 @@
             </h5>
             <h5>Owner: <%= book.user %>
             </h5>
+            <h5>Condition: <span id="book-condition" class="<%= book.condition %>">
+                <%= book.condition %>
+              </span></h5>
             <a href="chat.html?username=<%= book.user %>&bookId=<%= book._id %>">Chat with owner</a>
-
-
           </div>
         </div>
+
       </div>
       <div class="buy-section">
         <button onclick="buyNow()">Buy Now</button>

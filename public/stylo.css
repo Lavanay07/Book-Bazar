@@ -126,3 +126,31 @@ p {
 .star.active {
   color: gold;
 }
+
+/* Add styles for different conditions */
+#book-condition {
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.new {
+  background-color: green;
+}
+
+.like-new {
+  background-color: blue;
+}
+
+.good {
+  background-color: orange;
+}
+
+.fair {
+  background-color: yellow;
+}
+
+.poor {
+  background-color: red;
+}
