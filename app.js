@@ -67,7 +67,7 @@ const bookRoutes = require("./routes/books");
 app.use("/auth", authRouter);
 app.use("/books", bookRoutes);
 
-let showDropdown;
+let showDropdown = false;
 
 app.get("/", async (req, res) => {
   const user = req.session.user;
@@ -87,6 +87,7 @@ app.get("/", async (req, res) => {
     ratings = await Rating.find({}).exec();
 
     // Render the index.ejs template with the fetched data
+    // console.log("UUSSEERR", user);
     res.render("index", { user, books, ratings, showDropdown });
   } catch (err) {
     console.error("Error:", err);
@@ -107,11 +108,24 @@ app.get("/get-user", (req, res) => {
   }
 });
 
+// API endpoint to get the ID of the logged-in user
+app.get("/get-logged-in-user-id", (req, res) => {
+  // Check if the user is logged in
+  if (req.session.user && req.session.user._id) {
+    res.json({ userId: req.session.user._id }); // Send the user ID in the response
+  } else {
+    res.status(401).json({ error: "User not logged in" }); // Send an error if the user is not logged in
+  }
+});
+
 app.get("/bookDetails", async (req, res) => {
   const bookId = req.query.id;
   const user = req.session.user;
+
   try {
     const book = await Book.findById(bookId);
+    console.log("book", book);
+    console.log("user", user);
     if (book) {
       res.render("bookDetails", { book, showDropdown, user });
     } else {
@@ -204,10 +218,30 @@ app.get("/books/owner/:bookId", async (req, res) => {
 
 // Add this route to handle star rating submissions
 // API endpoint to fetch user's rating for a book
+// app.get("/user-rating-review", async (req, res) => {
+//   try {
+//     const userId = req.session.user._id;
+//     const bookId = req.query.bookId;
+//     const ratingReview = await Rating.findOne({
+//       userId: userId,
+//       bookId: bookId,
+//     }).select("rating review");
+//     res.json({
+//       rating: ratingReview ? ratingReview.rating : null,
+//       review: ratingReview ? ratingReview.review : null,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching user rating and review:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 app.get("/user-rating-review", async (req, res) => {
   try {
-    const userId = req.session.user._id;
+    const userId = req.session.user ? req.session.user._id : null; // Check if user is defined
     const bookId = req.query.bookId;
+    if (!userId) {
+      return res.json({ rating: null, review: null });
+    }
     const ratingReview = await Rating.findOne({
       userId: userId,
       bookId: bookId,
@@ -222,13 +256,54 @@ app.get("/user-rating-review", async (req, res) => {
   }
 });
 
-// API endpoint to submit rating and review for a book
+// // API endpoint to submit rating and review for a book
+// app.post("/submit-rating-review", async (req, res) => {
+//   try {
+//     const userId = req.session.user._id;
+//     const { bookId, rating, review, bookimg, name } = req.body;
+
+//     // Check if the user has already rated and reviewed the book
+//     const existingRatingReview = await Rating.findOne({
+//       userId: userId,
+//       bookId: bookId,
+//     });
+//     if (existingRatingReview) {
+//       return res
+//         .status(400)
+//         .json({ error: "You have already rated and reviewed this book" });
+//     }
+
+//     // Create a new Rating document
+//     const newRatingReview = new Rating({
+//       userId: userId,
+//       bookId: bookId,
+//       rating: rating,
+//       review: review,
+//       bookimg: bookimg,
+//       username: name,
+//     });
+
+//     // Save the new rating and review to the database
+//     await newRatingReview.save();
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Rating and review submitted successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
+// Update the submit-rating-review endpoint to handle cases where user is not logged in
 app.post("/submit-rating-review", async (req, res) => {
   try {
-    const userId = req.session.user._id;
+    const userId = req.session.user ? req.session.user._id : null; // Check if user is defined
+    if (!userId) {
+      return res.status(401).json({ error: "User not logged in" }); // Send a 401 Unauthorized status if user is not logged in
+    }
     const { bookId, rating, review, bookimg, name } = req.body;
-
-    // Check if the user has already rated and reviewed the book
     const existingRatingReview = await Rating.findOne({
       userId: userId,
       bookId: bookId,
@@ -238,8 +313,6 @@ app.post("/submit-rating-review", async (req, res) => {
         .status(400)
         .json({ error: "You have already rated and reviewed this book" });
     }
-
-    // Create a new Rating document
     const newRatingReview = new Rating({
       userId: userId,
       bookId: bookId,
@@ -248,10 +321,7 @@ app.post("/submit-rating-review", async (req, res) => {
       bookimg: bookimg,
       username: name,
     });
-
-    // Save the new rating and review to the database
     await newRatingReview.save();
-
     res.status(200).json({
       success: true,
       message: "Rating and review submitted successfully",

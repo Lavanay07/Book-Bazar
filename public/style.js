@@ -177,6 +177,7 @@ var swiper = new Swiper(".blogs-slider", {
 function toggleDropdown() {
   // console.log('toggleDropdown function called');
   var dropdown = document.getElementById("account-options");
+  console.log("execute", dropdown);
   if (dropdown.style.display === "none") {
     dropdown.style.display = "block";
   } else {
@@ -218,54 +219,3 @@ function validateEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
-
-// function fetchReviews() {
-//   fetch("/reviews") // Update the URL with the actual endpoint for fetching reviews
-//     .then((response) => response.json())
-//     .then((data) => {
-//       // Assuming the response contains an array of review objects
-//       const reviews = data.reviews;
-
-//       // Select the reviews slider element
-//       const reviewsSlider = document.querySelector(".reviews-slider");
-
-//       // Clear existing reviews
-//       reviewsSlider.innerHTML = "";
-
-//       // Iterate over the reviews and create HTML elements to display each review
-//       reviews.forEach((review) => {
-//         const reviewElement = document.createElement("div");
-//         reviewElement.classList.add("swiper-slide", "box");
-//         reviewElement.innerHTML = `
-//           <img src="${review.image}" alt="${review.author}">
-//           <h3>${review.author}</h3>
-//           <p>${review.comment}</p>
-//           <div class="stars">
-//             ${generateStarRating(review.rating)}
-//           </div>
-//         `;
-
-//         // Append the review element to the reviews slider
-//         reviewsSlider.appendChild(reviewElement);
-//       });
-//     })
-//     .catch((error) => {
-//       console.error("Error fetching reviews:", error);
-//     });
-// }
-
-// function generateStarRating(rating) {
-//   const maxRating = 5;
-//   let starsHTML = "";
-//   for (let i = 0; i < maxRating; i++) {
-//     if (i < rating) {
-//       starsHTML += `<i class="fas fa-star"></i>`;
-//     } else {
-//       starsHTML += `<i class="far fa-star"></i>`;
-//     }
-//   }
-//   return starsHTML;
-// }
-
-// // Call fetchReviews when the DOM is loaded
-// document.addEventListener("DOMContentLoaded", fetchReviews);
