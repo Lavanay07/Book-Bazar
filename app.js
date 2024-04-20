@@ -64,6 +64,8 @@ app.set("views", path.join(__dirname, "views"));
 const authRouter = require("./routes/auth");
 const bookRoutes = require("./routes/books");
 
+
+
 app.use("/auth", authRouter);
 app.use("/books", bookRoutes);
 
