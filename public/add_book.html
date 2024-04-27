@@ -178,6 +178,7 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="add_book.js"></script>
     <script>
       const forbiddenWords = ["sex", "porn", "nudity"];
       $("#book-form").on("submit", function (e) {
@@ -208,6 +209,7 @@
             if (data.success) {
               $("#success-message").text(data.message).show();
               $("#book-form")[0].reset();
+              console.log("llll", data);
             } else {
               $("#error-message").text(data.message).show();
             }

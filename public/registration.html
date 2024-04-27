@@ -25,6 +25,9 @@
           required
         /><br /><br />
 
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required /><br /><br />
+
         <button type="submit">Register</button>
         <a href="/" class="home-button">Home</a>
       </form>
@@ -40,6 +43,7 @@
           const name = document.getElementById("name").value;
           const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
+          const phone = document.getElementById("phone").value;
           const messageElement = document.getElementById("registrationMessage");
           const registerButton = document.querySelector(
             'button[type="submit"]'
@@ -49,7 +53,8 @@
           if (
             name.trim() === "" ||
             email.trim() === "" ||
-            password.trim() === ""
+            password.trim() === "" ||
+            phone.trim() === ""
           ) {
             messageElement.textContent = "All fields are required.";
             return;

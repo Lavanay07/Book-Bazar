@@ -63,6 +63,7 @@ router.post(
         condition,
       } = req.body;
       const user = req.session.user.name;
+      const userphn = req.session.user.phone;
 
       const filename = `/uploads/${req.uniqueFilename}`;
 
@@ -96,6 +97,7 @@ router.post(
           userEmail,
           quantity,
           condition,
+          userphn,
         });
 
         // Save the book to the database

@@ -40,22 +40,22 @@ function sendEmail(receiverEmail, subject, text) {
 router.post("/register", async (req, res) => {
   // Registration logic
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
 
     // Validate the input (you can add more validation here)
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required." });
     }
 
-    // Check if the user with the same email already exists
-    const existingUser = await User.findOne({ email });
+    // Check if the user with the same email or phone already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "User with this email already exists.",
+        message: "User with this email or phone already exists.",
       });
     }
 
@@ -63,7 +63,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10); // 10 is the number of salt rounds
 
     // Create a new user with the hashed password
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword, phone });
 
     // Save the user to the database
     await newUser.save();
@@ -83,6 +83,7 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
+
 // Login route
 router.post("/login", async (req, res) => {
   // Login logic

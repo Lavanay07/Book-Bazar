@@ -53,6 +53,7 @@ label {
 /* Style input fields */
 input[type="text"],
 input[type="email"],
+input[type="tel"],
 input[type="password"] {
   width: 100%;
   padding: 12px;
@@ -105,6 +106,7 @@ button[type="submit"]:hover {
 
   input[type="text"],
   input[type="email"],
+  input[type="tel"],
   input[type="password"] {
     margin-bottom: 15px;
     font-size: 14px;

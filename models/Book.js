@@ -21,6 +21,7 @@ const bookSchema = new mongoose.Schema(
       enum: ["new", "like new", "good", "fair", "poor"],
       required: true,
     },
+    userphn: String,
   },
   {
     timestamps: {
