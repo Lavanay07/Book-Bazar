@@ -8,8 +8,8 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <!-- <link rel="stylesheet" href="/stylo.css"> -->
-  <link rel="stylesheet" href="/style.css">
+   <!-- <link rel="stylesheet" href="/stylo.css"> -->
+   <link rel="stylesheet" href="/style.css">
 
   <style>
     body,
@@ -167,7 +167,7 @@
 
     .poor {
       background-color: red;
-    }
+    } 
   </style>
 
 <body>
@@ -286,6 +286,7 @@
               </span></h5>
             <a href="chat.html?username=<%= book.user %>&bookId=<%= book._id %>">Chat with owner</a>
           </div>
+         <a href="https://wa.me/<%= book.userphn %>" target="_blank">Chat with owner on WhatsApp</a>
         </div>
 
       </div>
@@ -315,15 +316,12 @@
     <div class="review-written">
       <textarea id="review" placeholder="Write your review here..."></textarea>
     </div>
-
     <div class="btns">
       <button id="submit-review-btn">Submit</button>
     </div>
 
     <div class="review-written-values"></div>
   </div>
-
-
   </div>
 
 
@@ -367,16 +365,6 @@
       let reviewText = '';
       let loggedInUserId = null; // Variable to store logged in user ID
 
-      // Function to fetch the logged in user's ID
-      // async function fetchLoggedInUserId() {
-      //     try {
-      //         const response = await axios.get('/get-logged-in-user-id');
-      //         return response.data.userId; // Assuming the server returns the logged in user's ID
-      //     } catch (error) {
-      //         console.error("Error fetching logged in user ID:", error);
-      //         return null;
-      //     }
-      // }
 
       // Function to fetch the logged in user's ID
       async function fetchLoggedInUserId() {
@@ -395,11 +383,7 @@
       }
 
 
-
-      // Check if the user is logged in and fetch their ID
       loggedInUserId = await fetchLoggedInUserId();
-
-      // Function to fetch the user's rating and review for the book
       async function fetchUserRatingReview() {
         try {
           const response = await axios.get(`/user-rating-review?bookId=${bookId}`);
@@ -411,10 +395,6 @@
       }
 
 
-
-
-
-      // Check if the user has already rated and reviewed the book
       const userRatingReview = await fetchUserRatingReview();
       if (userRatingReview && userRatingReview.rating) {
         userRating = userRatingReview.rating;
@@ -449,7 +429,6 @@
       });
 
       submitReviewBtn.addEventListener('click', async function () {
-        // Check if the user is logged in and has a name
         if (loggedInUserId) {
           try {
             const response = await axios.post('/submit-rating-review', {
@@ -458,7 +437,7 @@
               rating: userRating,
               review: reviewText,
               bookimg: '<%= book.image %>',
-              name: '<%= user ? user.name : "Anonymous" %>' // Use user's name if available, else "Anonymous"
+              name: '<%= user ? user.name : "Anonymous" %>' 
             });
             console.log("Review submitted successfully:", response.data);
             reviewWrittenContainer.style.display = 'none';
@@ -469,23 +448,14 @@
             console.error("Error submitting review:", error);
           }
         } else {
-          // Handle the case when the user is not logged in
           console.error("User not logged in");
           alert("Please log in first before submitting a review.");
-          // Clear the review text box
           reviewTextarea.value = '';
-          // Reset star ratings
           userRating = null;
-          updateStars(0); // Assuming 0 means no star rating
-
-          //   reviewTextarea.value = '';
-          // userRating = null;
+          updateStars(0); 
           reviewwrittenvalues.innerText = '';
           reviewAllContainer.appendChild(reviewwrittenvalues);
           ratingValue.innerHTML = '';
-          // reviewAllContainer.appendChild(reviewwrittenvalues);
-
-          // You can redirect the user to the login page or display a message
         }
       });
 
@@ -500,8 +470,6 @@
       }
     });
   </script>
-
-
 
 
 
