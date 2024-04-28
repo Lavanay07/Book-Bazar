@@ -1,3 +1,5 @@
+console.log("Logout button:", document.getElementById("logoutButton"));
+
 document.addEventListener("DOMContentLoaded", function () {
   const loginForm = document.querySelector(".login-form-container form");
   const emailInput = document.querySelector(
